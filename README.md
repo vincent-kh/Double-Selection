@@ -14,8 +14,18 @@
 
 ### 1. 安裝與設定環境 (Linux/WSL2)
 
+#### 安裝 WSL2 (推薦)
+```powershell
+wsl --install
+```
+
+#### 下載程式碼
+```bash
+git clone https://github.com/vincent-kh/Double-Selection.git
+```
+
 #### 安裝 uv
-本專案使用 [uv](https://github.com/astral.sh/uv) 進行環境與依賴管理：
+本專案使用 uv 進行環境與依賴管理：
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
