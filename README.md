@@ -1,6 +1,6 @@
-# lasso2 專案 Python 重構版本
+# Double Selection
 
-本專案是針對原始 MATLAB 變數選擇與價格風險推論流程的完整 Python 實作。在保留原始統計邏輯與控制流的基礎上，利用現代 Python 庫進行了模組化重構，並加入平行運算支援以大幅提升大規模因子運算效率。
+本程式是針對原始 MATLAB 變數選擇與價格風險推論流程的完整 Python 實作。在保留原始統計邏輯與控制流的基礎上，利用現代 Python 庫進行了模組化重構，並加入平行運算支援以大幅提升大規模因子運算效率。
 
 ## 核心設計目標
 
@@ -10,17 +10,27 @@
 
 ## 環境配置要求
 
-### 1. 套件依賴管理
-本專案使用 `uv` 作為套件管理工具。請確保系統已安裝 `uv`，並在 `python/` 目錄下執行以下命令同步虛擬環境：
+> **注意：** 本專案核心依賴 `glmnet_python` 的 Fortran 編譯版本，**僅限定於 Linux 環境執行**（推薦使用 Ubuntu 22.04+ 或 Windows WSL2）。
 
+### 1. 安裝與設定環境 (Linux/WSL2)
+
+#### 安裝 uv
+本專案使用 [uv](https://github.com/astral.sh/uv) 進行環境與依賴管理：
 ```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+#### 建立虛擬環境
+進入 `python/` 目錄並執行：
+```bash
+cd python
 uv sync
 ```
 
 ### 2. Fortran 運行時環境 (Runtime)
-由於 `glmnet_python` 底層呼叫 Fortran 編譯的二進位檔案，在 Linux 與 macOS 系統上需要特定版本的運行庫。本專案配置為優先從 `python/` 根目錄載入 `libgfortran.so.3`。
+由於 `glmnet_python` 底層呼叫 Fortran 編譯的二進位檔案，本專案已在 `python/` 根目錄預置了適用於 Linux 的 `libgfortran.so.3`。
 
-若您的環境缺乏此函式庫，可透過 Conda 建立暫時環境並提取：
+若您的系統環境無法識別該檔案，可透過 Conda 重新提取對應 Linux 版本的函式庫：
 
 ```bash
 conda create -y -p python/.conda-libgfortran -c conda-forge libgfortran=3.0.0
@@ -30,35 +40,33 @@ rm -rf python/.conda-libgfortran
 
 ## 執行指南
 
-所有分析流程的入口腳本均位於 `python/` 根目錄。
+所有分析流程的入口腳本均位於 `python/` 根目錄。請確保在 `python/` 目錄下執行命令。
 
 ### 主流程分析 (Main Analysis)
 執行主要的因子分析與價格風險估計（對應論文 Table 1）：
 ```bash
-uv run python/main.py [選項]
+uv run main.py [選項]
 ```
 參數說明：
-* `-n`, `--n_jobs`：平行運算使用的核心數（預設為 -1，即使用所有可用 CPU）。
-* `-q`, `--quiet`：抑制運算過程中因數值邊界產生的 RuntimeWarning（建議在平行執行時使用以保持輸出整潔）。
+* `-n`, `--n_jobs`：平行運算使用的核心數（預設為 -1）。
+* `-q`, `--quiet`：抑制運算過程中的 RuntimeWarning。
 
 ### 穩健性測試 (Robustness Checks)
-執行包含 5x5 投組、PCA 轉換及逐步選擇（Stepwise Selection）在內的系列穩定性測試：
+執行系列穩定性測試：
 ```bash
-uv run python/robustness.py [選項]
+uv run robustness.py [選項]
 ```
-參數說明：
-* `-n`, `--n_jobs`：平行運算核心數。
 
 ### 模擬分析 (Simulation)
-執行蒙地卡羅模擬（Monte Carlo Simulation）並產出分布圖與統計偏誤分析（對應論文 Figure 11）：
+執行蒙地卡羅模擬（對應論文 Figure 11）：
 ```bash
-uv run python/simulation.py
+uv run simulation.py
 ```
 
 ### 論文圖表重製
-重製論文中的 Figure 1（各個控制因子的選擇率柱狀圖）：
+重製論文中的 Figure 1（選擇率柱狀圖）：
 ```bash
-uv run python/plot_figure1.py
+uv run plot_figure1.py
 ```
 
 ## 專案目錄結構
@@ -74,3 +82,7 @@ uv run python/plot_figure1.py
 
 ## 資料管理說明
 為了優化執行效率與模組解耦，所有原本散落在 MATLAB 各個子目錄的原始資料已統一遷移至 `python/data/`。所有 Python 腳本會自動讀取該目錄，並將計算結果輸出至 `python/csv/`。
+
+## TODO
+- [ ] 支援台股資料分析 (Taiwan Stock Market Analysis)
+
