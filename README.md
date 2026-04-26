@@ -99,6 +99,11 @@ uv run plot_figure1.py
 ## 資料管理說明
 為了優化執行效率與模組解耦，所有原本散落在 MATLAB 各個子目錄的原始資料已統一遷移至 `python/data/`。所有 Python 腳本會自動讀取該目錄，並將計算結果輸出至 `python/csv/`。
 
+## 參考文獻 (Citation)
+
+> Feng, G., Giglio, S., & Xiu, D. (2020). Taming the Factor Zoo: A Test of New Factors. *The Journal of Finance*, 75(3), 1327-1370. [https://doi.org/10.1111/jofi.12883](https://doi.org/10.1111/jofi.12883)
+
 ## TODO
 - [ ] 支援台股資料分析 (Taiwan Stock Market Analysis)
+- [ ] 修正模擬分析中 stepwise regression 的 lambda 計算邏輯，確保結果與原始 MATLAB 版本一致。
 
