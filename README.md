@@ -51,6 +51,22 @@ uv run main.py [選項]
 * `-n`, `--n_jobs`：平行運算使用的核心數（預設為 -1）。
 * `-q`, `--quiet`：抑制運算過程中的 RuntimeWarning。
 
+理論上跑完應該長這樣
+```
+Warnings suppressed.
+Starting main analysis (n_jobs=-1)...
+Running main analysis...
+   tstat_ds  lambda_ds  tstat_ss  lambda_ss        avg  tstat_avg  lambda_ols  tstat_ols  lambda_FF3  tstat_FF3                                                                                                                              
+0 -0.419665 -34.174291  0.170401  15.278020  12.781594   0.983822  -17.859013  -0.156913   10.289765   0.543351
+1  1.028242  53.621017 -0.247830 -13.099122  22.735901   1.456857   67.970616   0.838919  -99.529036  -2.457982
+2  0.476284  19.542521  0.064086   2.989554  14.944968   1.446631   13.450302   0.258691   23.404917   1.999114
+3  0.915426  27.560385 -0.028992  -0.944216  20.883010   2.053557   15.863782   0.409817   20.168990   1.906252
+4  1.447043  34.582015  1.490301  38.188393  91.351888   5.977353   48.854385   1.492021   35.905707   2.248955
+Main analysis completed in 12.99 seconds.
+Main analysis finished.
+Results saved to: csv/main.csv
+```
+
 ### 穩健性測試 (Robustness Checks)
 執行系列穩定性測試：
 ```bash
@@ -71,7 +87,7 @@ uv run plot_figure1.py
 
 ## 專案目錄結構
 
-* **python/lasso2/**：核心套件目錄。
+* **python/module/**：核心套件目錄。
     * `core.py`：雙選擇（DS）與 OLS 核心算法實作。
     * `utils.py`：路徑常量、PCA 協方差計算與通用數值工具。
     * `selection.py`：時間序列交叉驗證與逐步回歸邏輯。
